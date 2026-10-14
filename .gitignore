@@ -1,0 +1,4 @@
+output/
+tmp/
+*.pdf
+.DS_Store

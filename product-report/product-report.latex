@@ -1,0 +1,235 @@
+% ======================================================================
+% Product Report — 通用产品文档 LaTeX 模板（Pandoc + XeLaTeX）
+%
+% 品牌定制方式（均在元数据 yaml 中完成，无需改动本文件）：
+%   wordmark / wordmark-cn   页眉与封面文字标识
+%   color-navy / color-blue / color-cyan ...  品牌色（HTML 色值，不带 #）
+%   cover-fields             封面信息区自定义键值行
+%   cover-tagline            封面底部一句话标语
+%   assets/logo.png          封面主 Logo（存在时自动使用，见 build.sh）
+%   assets/logo-icon.png     页眉小图标（存在时自动使用）
+% ======================================================================
+\documentclass[UTF8,11pt,a4paper,fontset=none]{ctexart}
+
+\usepackage{fontspec}
+\IfFontExistsTF{PingFang SC}{
+  \setCJKmainfont{PingFang SC}[BoldFont={PingFang SC Semibold}]
+  \setCJKsansfont{PingFang SC}[BoldFont={PingFang SC Semibold}]
+}{
+  \setCJKmainfont[Extension=.otf,BoldFont=FandolSong-Bold.otf]{FandolSong-Regular}
+  \setCJKsansfont[Extension=.otf,BoldFont=FandolHei-Bold.otf]{FandolHei-Regular}
+}
+\IfFontExistsTF{Avenir Next}{
+  \setmainfont{Avenir Next}
+  \setsansfont{Avenir Next}
+}{
+  \setmainfont{TeX Gyre Heros}
+  \setsansfont{TeX Gyre Heros}
+}
+\IfFontExistsTF{Menlo}{
+  \setmonofont{Menlo}[Scale=0.86]
+}{
+  \setmonofont{TeX Gyre Cursor}[Scale=0.86]
+}
+
+\usepackage[a4paper,top=24mm,bottom=24mm,left=24mm,right=24mm,headheight=16pt]{geometry}
+\usepackage{microtype}
+\usepackage{setspace}
+\setstretch{1.22}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.55em}
+
+% ---------------- 品牌色（可用元数据 color-* 覆盖） ----------------
+\usepackage[table]{xcolor}
+\usepackage{colortbl}
+\definecolor{BrandNavy}{HTML}{$if(color-navy)$$color-navy$$else$102A43$endif$}
+\definecolor{BrandBlue}{HTML}{$if(color-blue)$$color-blue$$else$1677FF$endif$}
+\definecolor{BrandCyan}{HTML}{$if(color-cyan)$$color-cyan$$else$24B9B3$endif$}
+\definecolor{BrandInk}{HTML}{$if(color-ink)$$color-ink$$else$243B53$endif$}
+\definecolor{BrandMuted}{HTML}{$if(color-muted)$$color-muted$$else$627D98$endif$}
+\definecolor{BrandLine}{HTML}{$if(color-line)$$color-line$$else$D9E2EC$endif$}
+\definecolor{BrandPale}{HTML}{$if(color-pale)$$color-pale$$else$F4F7FB$endif$}
+\definecolor{BrandIce}{HTML}{$if(color-ice)$$color-ice$$else$EAF4FF$endif$}
+\definecolor{BrandWarm}{HTML}{$if(color-warm)$$color-warm$$else$FFF7E8$endif$}
+
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{calc,positioning}
+\usepackage{booktabs}
+\usepackage{longtable}
+% Pandoc emits \def\LTcaptype{none} for caption-less tables.
+\makeatletter
+\@ifundefined{c@none}{\newcounter{none}}{}
+\makeatother
+\usepackage{array}
+\usepackage{calc}
+\usepackage{ragged2e}
+\usepackage{makecell}
+\usepackage{multirow}
+\usepackage{pdflscape}
+\usepackage{etoolbox}
+\usepackage[most]{tcolorbox}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{bookmark}
+\usepackage{url}
+\usepackage{footnotehyper}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=BrandBlue,
+  urlcolor=BrandBlue,
+  citecolor=BrandBlue,
+  pdfborder={0 0 0},
+  pdftitle={$title$},
+  pdfauthor={$if(author)$$author$$else$$if(wordmark)$$wordmark$$endif$$endif$}
+}
+\urlstyle{same}
+
+% ---------------- 品牌文字标识 ----------------
+\newcommand{\BrandWordmark}{%
+$if(logoicon)$
+  \raisebox{-0.3ex}{\includegraphics[height=3.6mm]{$logoicon$}}%
+$else$
+  \begin{tikzpicture}[baseline=-0.65ex]
+    \fill[BrandBlue] (0,0) circle (0.18);
+    \draw[white,line width=0.7pt,line cap=round] (-0.07,-0.07)--(-0.07,0.07)--(0.07,-0.07)--(0.07,0.07);
+  \end{tikzpicture}%
+$endif$
+  \hspace{0.45em}\textsf{\bfseries $if(wordmark)$$wordmark$$else$PRODUCT$endif$}$if(wordmark-cn)$\hspace{0.45em}\textcolor{BrandMuted}{\textsf{$wordmark-cn$}}$endif$%
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\BrandWordmark}
+\fancyhead[R]{\small\color{BrandMuted}$if(document-type)$$document-type$$else$PRODUCT DOCUMENT$endif$}
+\fancyfoot[L]{\scriptsize\color{BrandMuted}$if(version)$VERSION $version$$else$INTERNAL DRAFT$endif$}
+\fancyfoot[R]{\scriptsize\color{BrandMuted}\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{BrandLine}\leaders\hrule height \headrulewidth\hfill}}
+\renewcommand{\footrulewidth}{0pt}
+
+\titleformat{\section}
+  {\Large\bfseries\sffamily\color{BrandNavy}}
+  {\colorbox{BrandBlue}{\textcolor{white}{\strut\thesection}}}
+  {0.65em}{}
+\titlespacing*{\section}{0pt}{2.2em}{0.75em}
+
+\titleformat{\subsection}
+  {\large\bfseries\sffamily\color{BrandInk}}
+  {\thesubsection}{0.55em}{}
+\titlespacing*{\subsection}{0pt}{1.55em}{0.45em}
+
+\titleformat{\subsubsection}
+  {\normalsize\bfseries\sffamily\color{BrandBlue}}
+  {\thesubsubsection}{0.45em}{}
+
+\setlist[itemize]{leftmargin=1.5em,itemsep=0.3em,topsep=0.35em}
+\setlist[enumerate]{leftmargin=1.7em,itemsep=0.3em,topsep=0.35em}
+\renewcommand\labelitemi{\textcolor{BrandBlue}{\small\textbullet}}
+
+\AtBeginEnvironment{longtable}{\small\renewcommand{\arraystretch}{1.35}}
+\AtBeginEnvironment{tabular}{\small\renewcommand{\arraystretch}{1.35}}
+\arrayrulecolor{BrandLine}
+\setlength{\tabcolsep}{5pt}
+
+\let\oldtoprule\toprule
+\renewcommand{\toprule}{\arrayrulecolor{BrandBlue}\oldtoprule[1.2pt]\arrayrulecolor{BrandLine}}
+
+\renewenvironment{quote}
+  {\begin{tcolorbox}[
+    enhanced,
+    breakable,
+    colback=BrandIce,
+    colframe=BrandIce,
+    boxrule=0pt,
+    arc=1.5mm,
+    left=4mm,right=4mm,top=2.5mm,bottom=2.5mm,
+    before skip=0.8em,after skip=0.8em
+  ]\color{BrandInk}\itshape}
+  {\end{tcolorbox}}
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+% ---------------- 封面 ----------------
+\newcommand{\ProductCover}{%
+  \begin{titlepage}
+    \thispagestyle{empty}
+    \begin{tikzpicture}[remember picture,overlay]
+      \fill[BrandPale] (current page.south west) rectangle (current page.north east);
+      \fill[BrandNavy] (current page.north west) rectangle ([xshift=21mm]current page.south west);
+      \fill[BrandBlue] ([xshift=21mm]current page.north west) rectangle ([xshift=24mm]current page.south west);
+      \fill[BrandBlue,opacity=0.10] ([xshift=-76mm,yshift=38mm]current page.north east) circle (66mm);
+      \fill[BrandCyan,opacity=0.12] ([xshift=-10mm,yshift=-18mm]current page.north east) circle (45mm);
+      \draw[BrandBlue,line width=1.2pt,opacity=0.38]
+        ([xshift=-88mm,yshift=-40mm]current page.north east) arc (210:350:55mm);
+    \end{tikzpicture}
+    \vspace*{16mm}
+    \hspace*{19mm}
+    \begin{minipage}{0.78\textwidth}
+$if(logo)$
+      \includegraphics[height=30mm]{$logo$}
+$else$
+      \BrandWordmark
+$endif$
+
+      \vspace{18mm}
+      {\sffamily\bfseries\color{BrandBlue}\small\MakeUppercase{$if(document-type)$$document-type$$else$PRODUCT DOCUMENT$endif$}\par}
+      \vspace{6mm}
+      {\sffamily\bfseries\color{BrandNavy}\fontsize{30}{38}\selectfont $title$\par}
+      $if(subtitle)$
+      \vspace{5mm}
+      {\sffamily\color{BrandInk}\fontsize{14}{21}\selectfont $subtitle$\par}
+      $endif$
+
+      \vfill
+      \begin{tabular}{@{}>{\color{BrandMuted}\small\sffamily}p{24mm}>{\color{BrandInk}\small\sffamily}p{78mm}@{}}
+        日期 & $date$ \\
+        版本 & $if(version)$$version$$else$0.1$endif$ \\
+        $if(status)$状态 & $status$ \\$endif$
+$for(cover-fields)$
+        $cover-fields.label$ & $cover-fields.value$ \\
+$endfor$
+      \end{tabular}
+
+      \vspace{14mm}
+      {\color{BrandMuted}\small\sffamily $if(cover-tagline)$$cover-tagline$$endif$\par}
+    \end{minipage}
+    \vspace*{12mm}
+  \end{titlepage}
+}
+
+\begin{document}
+
+\ProductCover
+
+\pagenumbering{roman}
+\setcounter{page}{1}
+$if(toc)$
+\begin{tcolorbox}[
+  enhanced,
+  colback=white,
+  colframe=BrandLine,
+  boxrule=0.5pt,
+  arc=2mm,
+  left=7mm,right=7mm,top=5mm,bottom=5mm
+]
+{\Large\bfseries\sffamily\color{BrandNavy}目录}\par
+\vspace{0.5em}
+\makeatletter
+\renewcommand\tableofcontents{\@starttoc{toc}}
+\makeatother
+\tableofcontents
+\end{tcolorbox}
+\clearpage
+$endif$
+
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+$body$
+
+\end{document}
