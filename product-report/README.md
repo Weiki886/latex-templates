@@ -48,6 +48,17 @@ bash product-report/build.sh path/to/你的文档.md path/to/元数据.yaml outp
 
 示例见 [examples/example.md](examples/example.md)。
 
+## 真实文档示例
+
+[examples/design-case.md](examples/design-case.md) + [design-case.yaml](examples/design-case.yaml) 是一份完整产品设计案的脱敏版本（[生成的 PDF](examples/design-case.pdf)），演示模板在 300+ 行长文档上的表现：品牌封面、目录、信息框、自动横向的宽表格、紧凑表格与手动横向页。构建命令：
+
+```bash
+bash product-report/build.sh \
+  product-report/examples/design-case.md \
+  product-report/examples/design-case.yaml \
+  product-report/examples/design-case.pdf
+```
+
 ## 目录结构
 
 ```

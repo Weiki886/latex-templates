@@ -1,4 +1,5 @@
 output/
 tmp/
 *.pdf
+!product-report/examples/*.pdf
 .DS_Store
