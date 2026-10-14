@@ -1,4 +1,4 @@
-title: 智衡产品设计案
+title: 诺循产品设计案
 subtitle: 证据约束的复杂售后办理 Agent（脱敏示例）
 author: Product Team
 date: 2026 年 9 月 23 日
@@ -10,11 +10,11 @@ toc-depth: 2
 numbersections: true
 lang: zh-CN
 
-wordmark: ZHIHENG
-wordmark-cn: 智衡
+wordmark: NUORYN
+wordmark-cn: 诺循
 cover-fields:
   - label: 项目
-    value: 智衡 ZhiHeng
+    value: 诺循 Nuoryn
   - label: 场景
     value: 智能硬件售后 · 参赛方案示例
 cover-tagline: 从问题证据到产品机会，让每一次服务交接都能继续向前。
