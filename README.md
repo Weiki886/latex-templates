@@ -13,8 +13,10 @@
 ```bash
 git clone https://github.com/Weiki886/latex-templates.git
 cd latex-templates
-bash product-report/build.sh   # 构建示例，验证 pandoc + XeLaTeX 环境
+bash product-report/build.sh 文档.md 元数据.yaml 输出.pdf
 ```
+
+各模板的示例效果见对应目录下的 `examples/`（如 [product-report/examples/example.pdf](product-report/examples/example.pdf)）。
 
 各模板的详细用法见对应目录下的 README。
 

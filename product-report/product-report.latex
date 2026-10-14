@@ -154,6 +154,11 @@ $endif$
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 
+% Pandoc 代码块高亮环境
+$if(highlighting-macros)$
+$highlighting-macros$
+$endif$
+
 % ---------------- 封面 ----------------
 \newcommand{\ProductCover}{%
   \begin{titlepage}

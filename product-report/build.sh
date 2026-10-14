@@ -3,15 +3,18 @@
 #
 # 用法：
 #   bash build.sh <源文档.md> <元数据.yaml> <输出.pdf>
-# 不带参数时构建内置示例：examples/example.md -> output/pdf/example.pdf
 set -euo pipefail
 
 script_dir="$(cd "$(dirname "$0")" && pwd)"
 caller_dir="$(pwd)"
 
-source_file="${1:-$script_dir/examples/example.md}"
-metadata_file="${2:-$script_dir/examples/example.yaml}"
-output_file="${3:-$caller_dir/output/pdf/example.pdf}"
+if [[ $# -lt 3 ]]; then
+  echo "用法: bash build.sh <源文档.md> <元数据.yaml> <输出.pdf>" >&2
+  exit 1
+fi
+source_file="$1"
+metadata_file="$2"
+output_file="$3"
 
 # 相对路径统一转为绝对路径，避免 pandoc/xelatex 工作目录差异
 to_abs() {
@@ -32,14 +35,24 @@ export TEXMFCONFIG="${TMPDIR:-/tmp}/product-report-texmf-config"
 export HOME="${HOME:-/tmp}"
 mkdir -p "$TEXMFVAR" "$TEXMFCONFIG"
 
-# 品牌图片：assets/ 下存在 logo.png / logo-icon.png 时自动启用，
-# 替换这两张图即可更换品牌视觉，无需改动模板
+# 品牌图片：logo.png / logo-icon.png 存在时自动启用。
+# 元数据文件旁边的 assets/ 优先（单文档品牌），其次是模板 assets/（全局默认）。
+metadata_dir="$(cd "$(dirname "$metadata_file")" && pwd)"
+pick_asset() {
+  if [[ -f "$metadata_dir/assets/$1" ]]; then
+    printf '%s\n' "$metadata_dir/assets/$1"
+  elif [[ -f "$script_dir/assets/$1" ]]; then
+    printf '%s\n' "$script_dir/assets/$1"
+  fi
+}
 logo_args=()
-if [[ -f "$script_dir/assets/logo.png" ]]; then
-  logo_args+=(--variable "logo=$script_dir/assets/logo.png")
+logo_path="$(pick_asset logo.png || true)"
+icon_path="$(pick_asset logo-icon.png || true)"
+if [[ -n "${logo_path:-}" ]]; then
+  logo_args+=(--variable "logo=$logo_path")
 fi
-if [[ -f "$script_dir/assets/logo-icon.png" ]]; then
-  logo_args+=(--variable "logoicon=$script_dir/assets/logo-icon.png")
+if [[ -n "${icon_path:-}" ]]; then
+  logo_args+=(--variable "logoicon=$icon_path")
 fi
 
 pandoc "$source_file" \

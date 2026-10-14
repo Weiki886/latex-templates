@@ -5,20 +5,18 @@
 ## 快速开始
 
 ```bash
-# 构建内置示例（验证环境）
-bash product-report/build.sh
-
-# 构建自己的文档
 bash product-report/build.sh path/to/你的文档.md path/to/元数据.yaml output/pdf/你的文档.pdf
 ```
 
 依赖：`pandoc`（≥3.x）与 XeLaTeX（TeX Live / MacTeX）。中文优先使用 PingFang SC，英文优先 Avenir Next，缺失时自动回退到 TeX 内置字体。
 
+**参考效果：** [examples/example.pdf](examples/example.pdf) 是一份覆盖模板全部核心能力的示例 PDF（品牌封面、目录、信息框、自动等宽与横向表格、手动列宽、紧凑模式），同时演示了各元数据参数的用法。
+
 ## 换成你自己的品牌
 
 三步完成，无需改动 `.latex` 模板文件：
 
-1. **换 Logo**：替换 `assets/logo.png`（封面主图，高约 30mm）和 `assets/logo-icon.png`（页眉小图标，方形）。删除对应文件则回退到文字标识。
+1. **换 Logo**：替换 `assets/logo.png`（封面主图，高约 30mm）和 `assets/logo-icon.png`（页眉小图标，方形）。删除对应文件则回退到文字标识。若只想对某一份文档换品牌，把图片放在该文档元数据文件旁的 `assets/` 目录即可，优先级高于模板全局图。
 2. **改名字**：在元数据 yaml 中设置 `wordmark`（英文主标识）与 `wordmark-cn`（中文副标识），页眉和封面自动生效。
 3. **调配色**（可选）：在 yaml 中用 `color-blue`、`color-navy`、`color-cyan` 等键覆盖品牌色（HTML 色值，不带 `#`）。
 
@@ -37,7 +35,7 @@ bash product-report/build.sh path/to/你的文档.md path/to/元数据.yaml outp
 | `cover-tagline` | 封面底部一句话标语 |
 | `color-navy` 等 9 个 | 品牌色覆盖：`navy/blue/cyan/ink/muted/line/pale/ice/warm` |
 
-完整示例见 [examples/example.yaml](examples/example.yaml)。
+各字段的完整写法与取值示例见 [examples/example.pdf](examples/example.pdf) 第 2 节。
 
 ## 排版能力
 
@@ -45,19 +43,6 @@ bash product-report/build.sh path/to/你的文档.md path/to/元数据.yaml outp
 - 四列及以上表格自动等宽，五列及以上自动转入横向页；
 - fenced Div 包表格 + `colwidths="0.2,0.5,0.3"` 可手动钉死列宽；
 - fenced Div 加 `landscape` 类可强制整段内容进入横向页，再加 `compact-table` 进一步压缩字号。
-
-示例见 [examples/example.md](examples/example.md)。
-
-## 真实文档示例
-
-[examples/design-case.md](examples/design-case.md) + [design-case.yaml](examples/design-case.yaml) 是一份完整产品设计案的脱敏版本（[生成的 PDF](examples/design-case.pdf)），演示模板在 300+ 行长文档上的表现：品牌封面、目录、信息框、自动横向的宽表格、紧凑表格与手动横向页。构建命令：
-
-```bash
-bash product-report/build.sh \
-  product-report/examples/design-case.md \
-  product-report/examples/design-case.yaml \
-  product-report/examples/design-case.pdf
-```
 
 ## 目录结构
 
@@ -68,7 +53,7 @@ product-report/
 ├── build.sh               # 构建脚本
 ├── filters/               # Pandoc Lua 过滤器（表格布局、标题清理）
 ├── assets/                # 占位品牌图，替换成你的 Logo 即可
-└── examples/              # 示例 Markdown 与元数据
+└── examples/              # 示例 PDF（参考效果）
 ```
 
 ## 致谢
